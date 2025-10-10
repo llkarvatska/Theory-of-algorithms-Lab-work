@@ -1,0 +1,65 @@
+def merge(a, left, mid, right):
+    comparisons = 0
+    assignments = 0 
+    
+    # Копіювання в допоміжні масиви L та R 
+    L = a[left:mid] 
+    R = a[mid:right] 
+    # Зауваження: Копіювання L та R призводить до N присвоювань,
+    # але ми будемо рахувати лише записи в основний масив 'a' 
+    
+    it1 = 0
+    it2 = 0
+    k = left
+    
+    while it1 < len(L) and it2 < len(R):
+        comparisons += 1
+        if L[it1] < R[it2]:
+            a[k] = L[it1]
+            assignments += 1  # Фіксація присвоювання
+            it1 += 1
+        else:   
+            a[k] = R[it2]
+            assignments += 1  # Фіксація присвоювання
+            it2 += 1
+        k += 1
+        
+    while it1 < len(L):
+        a[k] = L[it1]
+        assignments += 1  # Фіксація присвоювання
+        it1 += 1
+        k += 1
+        
+    while it2 < len(R):
+        a[k] = R[it2]
+        assignments += 1  # Фіксація присвоювання
+        it2 += 1
+        k += 1
+        
+    return comparisons, assignments
+
+def merge_sort_iterative(a):
+    n = len(a)
+    total_comparisons = 0
+    total_assignments = 0
+    i = 1
+    
+    while i < n:
+        j = 0
+        while j < n - i:
+            left = j
+            mid = j + i
+            right = min(j + 2 * i, n)
+            
+            c, a_count = merge(a, left, mid, right)
+            total_comparisons += c
+            total_assignments += a_count
+            j += 2 * i
+        i *= 2
+        
+    return a, total_comparisons, total_assignments
+
+data = [90, 10, 15, 80, 100, 6, 57, 5, 29]
+sorted_data, comps, assigns = merge_sort_iterative(data.copy())
+print("Відсортований список (Ітеративна):", sorted_data)
+print("Порівнянь:", comps, "Присвоювань:", assigns)
